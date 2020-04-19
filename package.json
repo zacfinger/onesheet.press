@@ -1,0 +1,22 @@
+{
+  "name": "onesheet.press",
+  "version": "0.0.4",
+  "description": "Uses Node.js to query WordPress API and make programmatic posts",
+  "main": "main.js",
+  "scripts": {
+    "test": "main.js"
+  },
+  "keywords": [
+    "WordPress",
+    "REST API",
+    "poetry",
+    "fantasy",
+    "gothic",
+    "Markov"
+  ],
+  "author": "zacfinger.com",
+  "license": "MIT",
+  "dependencies": {
+    "superagent": "^5.2.2"
+  }
+}
