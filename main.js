@@ -10,17 +10,18 @@
 // Uses WordPress REST API client for JavaScript by WordPress REST API Team
 // Ref: http:v2.wp-api.org
 //      https://github.com/WP-API/node-wpapi
-//      http://wp-api.org/node-wpapi/using-the-client/#creating-posts
 //
 // Error 'Cannot find module 'wpapi/superagent'' resolved 
-// by adding JSON Basic Authentication plugin to WordPress
+// by installing superagent via user iabbaskhan's recommendation
 // Ref: https://github.com/WP-API/node-wpapi/issues/451
-//      https://github.com/WP-API/Basic-Auth
 var WPAPI = require( 'wpapi' );
 var config = require( './config.js' );
 
 // You must authenticate to be able to POST (create) a post
-// 
+// by adding JSON Basic Authentication plugin to WordPress
+// Ref: https://github.com/WP-API/node-wpapi#authentication
+//      https://github.com/datocms/js-datocms-client/issues/69
+//      https://github.com/WP-API/Basic-Auth
 var wp = new WPAPI({
     endpoint: config.endpoint,
     // This assumes you are using basic auth, as described further below
@@ -29,7 +30,8 @@ var wp = new WPAPI({
 });
 wp.posts().create({
     // Create the post
-    // Ref: http://wp-api.org/node-wpapi/using-the-client/#creating-posts
+    // Ref: https://github.com/WP-API/node-wpapi#using-the-client
+    //      http://wp-api.org/node-wpapi/using-the-client/#creating-posts
     //
     // "title" and "content" are the only required properties
     title: 'Your Post Title',
