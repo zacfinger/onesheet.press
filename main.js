@@ -18,6 +18,7 @@ const fetch = require("node-fetch");
 // Retrieve WordPress environment variables
 var config = require( './config.js' );
 const token_endpoint = config.url + '/jwt-auth/v1/token';
+const post_endpoint = config.url + '/wp/v2/posts';
 //
 // Authenticate to POST (create) a post.
 // Username and password are passed in the body. 
@@ -46,12 +47,30 @@ const getToken = async (url) => {
   }
 };
 
-//TODO: create makePosts function
-/*const makePosts = async () => {
+// Create a post with a given post_title
+const makePosts = async (post_title) => {
   try {
-
+    const response = await fetch(post_endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': global["token"]
+      },
+      body: JSON.stringify({
+        "title": post_title,
+        "content":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "status":"publish"
+      })
+    })
+    
+    const json = await response.json();
+    return json;
+    
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
-};*/
+};
 
 const main = async () => {
   // Return token from asynchronous function and store in global
@@ -59,8 +78,15 @@ const main = async () => {
   //      http://www.vincentcatalano.com/
   //      https://medium.com/@milankrushna/window-is-not-defined-3a32b709e40f
   global["token"] = "Bearer " + await getToken(token_endpoint);
-  console.log(global["token"]);
-  // TODO: await makePosts()
+  
+  // Construst current time string
+  // Ref: https://tecadmin.net/get-current-date-time-javascript/
+  var today = new Date();
+  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+
+  response = await makePosts("New test post made at " + time);
+
+  console.log(response);
 };
 
 ( async () => {
