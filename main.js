@@ -1,53 +1,75 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Project: Onesheet.press
-// Description: Uses Node.js to query WordPress API and make programmatic posts
+// Description: Uses Node.js and the WordPress REST API
+//              to build a generative poetry journal
 // Author: zacfinger.com
 // Date: 2020 April
 // License: MIT
 ////////////////////////////////////////////////////////////////////////////////
-
+// TODO: Uninstall unused NPM packages
+// Ref: https://medium.com/stackfame/how-to-npm-unistall-unused-packages-in-node-js-ea80afb6d1a7
+//      https://stackoverflow.com/questions/21417014/npm-command-to-uninstall-or-prune-unused-packages-in-node-js
 ////////////////////////////////////////////////////////////////////////////////
-// Uses WordPress REST API client for JavaScript by WordPress REST API Team
-// Ref: http:v2.wp-api.org
-//      https://github.com/WP-API/node-wpapi
 //
-// Error 'Cannot find module 'wpapi/superagent'' resolved 
-// by installing superagent via user iabbaskhan's recommendation
-// Ref: https://github.com/WP-API/node-wpapi/issues/451
-var WPAPI = require( 'wpapi' );
+// Include node-fetch to make HTTP requests.
+// Ref: https://github.com/node-fetch/node-fetch
+const fetch = require("node-fetch");
+//
+// Retrieve WordPress environment variables
 var config = require( './config.js' );
+const token_endpoint = config.url + '/jwt-auth/v1/token';
+//
+// Authenticate to POST (create) a post.
+// Username and password are passed in the body. 
+// Ref: https://wordpress.org/support/topic/authenticate-via-javascript-fetch-for-rest-api/#post-10769682
+//      https://stackoverflow.com/questions/46157487/react-native-jwt-auth-error-fetching-api      
+//      https://www.valentinog.com/blog/http-js/
+const getToken = async (url) => {
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "username": config.username,
+        "password": config.password
+      })
+    })
+    
+    const json = await response.json();
+    return json.token;
+    
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 
-// You must authenticate to be able to POST (create) a post
-// by adding JSON Basic Authentication plugin to WordPress
-// Ref: https://github.com/WP-API/node-wpapi#authentication
-//      https://github.com/datocms/js-datocms-client/issues/69
-//      https://github.com/WP-API/Basic-Auth
-var wp = new WPAPI({
-    endpoint: config.endpoint,
-    // This assumes you are using basic auth, as described further below
-    username: config.username,
-    password: config.password
-});
-wp.posts().create({
-    // Create the post
-    // Ref: https://github.com/WP-API/node-wpapi#using-the-client
-    //      http://wp-api.org/node-wpapi/using-the-client/#creating-posts
-    //
-    // "title" and "content" are the only required properties
-    title: 'Your Post Title',
-    content: 'Your post content',
-    // Post will be created as a draft by default if a specific "status"
-    // is not specified
-    status: 'publish'
-}).then(function( response ) {
-    // Traversy Media video helpful in resolving "UnhandledPromiseRejectionWarning"
-    // Ref: https://www.youtube.com/watch?v=fFNXWinbgro
-    //
-    // "response" will hold all properties of your newly-created post,
-    // including the unique `id` the post was assigned on creation
-    console.log( response.id );
-    console.log( response );
-}).catch(function(err){
-    console.log(err);
-});
+//TODO: create makePosts function
+/*const makePosts = async () => {
+  try {
+
+  }
+};*/
+
+const main = async () => {
+  // Return token from asynchronous function and store in global
+  // Ref: https://stackoverflow.com/questions/48327559/save-async-await-response-on-a-variable
+  //      http://www.vincentcatalano.com/
+  //      https://medium.com/@milankrushna/window-is-not-defined-3a32b709e40f
+  global["token"] = "Bearer " + await getToken(token_endpoint);
+  console.log(global["token"]);
+  // TODO: await makePosts()
+};
+
+( async () => {
+
+  try {
+    await main();
+  } catch(err) {
+    console.log("Main application failure: ");
+    console.error(err);
+  }
+})();
 

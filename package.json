@@ -1,7 +1,7 @@
 {
   "name": "onesheet.press",
   "version": "0.0.4",
-  "description": "Uses Node.js to query WordPress API and make programmatic posts",
+  "description": "Uses Node.js and the WordPress REST API to build a generative poetry journal",
   "main": "main.js",
   "scripts": {
     "test": "main.js"
@@ -17,6 +17,10 @@
   "author": "zacfinger.com",
   "license": "MIT",
   "dependencies": {
-    "superagent": "^5.2.2"
+    "node-fetch": "^2.6.0"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/zacfinger/onesheet.press"
   }
 }
