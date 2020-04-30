@@ -25,7 +25,9 @@ Uses Node.js and the WordPress REST API to build a generative poetry journal
             * https://www.terrain.org/ 
     * Set "Show in Rest API" to "True"
     * Set REST API base slug
-    * Select attributes to be made available in the "Supports" area 
+    * Select attributes to be made available in the "Supports" area
+        * Excerpt
+        * Author
 * Create test Issues, Poems and articles with test values
 * Install [Advanced Custom Fields plugin](https://wordpress.org/plugins/advanced-custom-fields/)
     * Add test fields to objects.
